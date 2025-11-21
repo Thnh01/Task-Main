@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard - Task Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .stats { display: flex; gap: 20px; margin: 20px 0; }
+        .stat-box { border: 1px solid #ddd; padding: 20px; border-radius: 5px; flex: 1; }
+        .stat-number { font-size: 2em; font-weight: bold; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        nav { margin-bottom: 20px; }
+        nav a { margin-right: 10px; }
+        .status { padding: 3px 8px; border-radius: 3px; color: white; }
+        .PENDING { background-color: #FFA500; }
+        .TO_DO { background-color: #007BFF; }
+        .IN_PROGRESS { background-color: #17A2B8; }
+        .DONE { background-color: #28A745; }
+    </style>
+</head>
+<body>
+<h1>Task Management Dashboard</h1>
+
+<nav>
+    <a href="/">Dashboard</a>
+    <a href="/tasks">Tasks</a>
+    <a href="/users">Users</a>
+</nav>
+
+<div class="stats">
+    <div class="stat-box">
+        <h3>Total Tasks</h3>
+        <div class="stat-number" th:text="${tasks.size()}">0</div>
+    </div>
+    <div class="stat-box">
+        <h3>Active Users</h3>
+        <div class="stat-number" th:text="${users.size()}">0</div>
+    </div>
+</div>
+
+<h2>Recent Tasks</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th>Due Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.taskId}"></td>
+        <td th:text="${task.title}"></td>
+        <td><span class="status" th:classappend="${task.status}" th:text="${task.status}"></span></td>
+        <td th:text="${task.priority}"></td>
+        <td th:text="${task.dueDate}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

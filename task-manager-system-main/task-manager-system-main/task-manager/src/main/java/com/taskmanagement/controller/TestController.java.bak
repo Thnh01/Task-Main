@@ -1,0 +1,66 @@
+package com.taskmanagement.controller;
+
+import com.taskmanagement.repository.UserRepo;
+import com.taskmanagement.entity.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+public class TestController {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @GetMapping("/test")
+    public String test() {
+        return "Backend is running!";
+    }
+
+    @GetMapping("/test-db")
+    @Transactional(readOnly = true)
+    public String testDatabase() {
+        try {
+            Long userCount = entityManager
+                    .createQuery("SELECT COUNT(u) FROM User u", Long.class)
+                    .getSingleResult();
+            return "Database connected! User count: " + userCount;
+        } catch (Exception e) {
+            return "Database error: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/test-simple")
+    public String simpleT(){
+        return "Simple endpoint test is working!";
+    }
+
+    @Autowired
+    private UserRepo userRepo;
+
+    @GetMapping(value = "/users")
+    public List<User> getUsers(){
+        return userRepo.findAll();
+    }
+
+    //use PostMapping for saving data
+    @PostMapping
+    public String saveUser(User user) {
+        //request body using json, annotate our user parameter at the request body
+        userRepo.save(user);
+        return "Saved...!";
+    }
+
+    @PutMapping(value = "update/{id}")
+    public String updateUser(@PathVariable int id, @RequestBody User user){
+        User updatedUser = userRepo.findById(id).get();
+        updatedUser.setUsername(user.getUsername);
+        updatedUser.setEmail(user.getEmail);
+    }
+}
