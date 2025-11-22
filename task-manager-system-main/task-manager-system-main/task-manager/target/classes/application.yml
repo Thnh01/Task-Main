@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: task-manager
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/taskManagerDB_testing?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root # Replace with your MySQL username
+    password: 123456   # Replace with your MySQL password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Use 'validate' since we already created tables
+    show-sql: true
+    open-in-view: false  # Disable open-in-view to avoid warnings
+    properties:
+      hibernate:
+        format_sql: true
+        # dialect: org.hibernate.dialect.MySQL8Dialect  # Removed - Hibernate auto-detects
+
+  #security:
+    #jwt:
+      #secret-key: "your-very-long-secret-key-at-least-256-bits-long-for-security"
+      #expiration: 86400000  # 24 hours in milliseconds
+
+server:
+  port: 8080
+  servlet:
+    context-path:
+
+# CORS configuration
+cors:
+  allowed-origins: "http://localhost:5173"  # Your Vite React app URL
+  allowed-methods: "*"
+  allowed-headers: "*"
+  allow-credentials: true
+
+logging:
+  level:
+    com.taskmanagement: DEBUG
+    org.springframework.security: DEBUG
+    com.zaxxer.hikari: DEBUG  # Enable HikariCP logging to see pool configuration
